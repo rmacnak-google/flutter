@@ -370,21 +370,15 @@ class CompileTest {
     final _UnzipListEntry libflutter = fileToMetadata['lib/armeabi-v7a/libflutter.so'];
     final _UnzipListEntry isolateSnapshotData = fileToMetadata['assets/isolate_snapshot_data'];
     final _UnzipListEntry isolateSnapshotInstr = fileToMetadata['assets/isolate_snapshot_instr'];
-    final _UnzipListEntry vmSnapshotData = fileToMetadata['assets/vm_snapshot_data'];
-    final _UnzipListEntry vmSnapshotInstr = fileToMetadata['assets/vm_snapshot_instr'];
     final _UnzipListEntry license = fileToMetadata['assets/flutter_assets/LICENSE'];
 
     return <String, dynamic>{
       'libflutter_uncompressed_bytes': libflutter.uncompressedSize,
       'libflutter_compressed_bytes': libflutter.compressedSize,
       'snapshot_uncompressed_bytes': isolateSnapshotData.uncompressedSize +
-          isolateSnapshotInstr.uncompressedSize +
-          vmSnapshotData.uncompressedSize +
-          vmSnapshotInstr.uncompressedSize,
+          isolateSnapshotInstr.uncompressedSize,
       'snapshot_compressed_bytes': isolateSnapshotData.compressedSize +
-          isolateSnapshotInstr.compressedSize +
-          vmSnapshotData.compressedSize +
-          vmSnapshotInstr.compressedSize,
+          isolateSnapshotInstr.compressedSize,
       'license_uncompressed_bytes': license.uncompressedSize,
       'license_compressed_bytes': license.compressedSize,
     };

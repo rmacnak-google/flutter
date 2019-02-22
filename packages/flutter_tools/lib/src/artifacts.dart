@@ -18,7 +18,6 @@ enum Artifact {
   flutterTester,
   snapshotDart,
   flutterFramework,
-  vmSnapshotData,
   isolateSnapshotData,
   platformKernelDill,
   platformLibrariesJson,
@@ -43,17 +42,6 @@ String _artifactToFileName(Artifact artifact, [ TargetPlatform platform, BuildMo
       return 'snapshot.dart';
     case Artifact.flutterFramework:
       return 'Flutter.framework';
-    case Artifact.vmSnapshotData:
-      // Flutter debug and dynamic profile modes for all target platforms use Dart
-      // RELEASE VM snapshot that comes from host debug build and has the metadata
-      // related to development tools.
-      if (mode == BuildMode.dynamicRelease) {
-        return 'product_vm_isolate_snapshot.bin';
-      }
-      // Flutter dynamic release mode for all target platforms uses Dart PRODUCT
-      // VM snapshot from host dynamic release build that strips out the metadata
-      // related to development tools.
-      return 'vm_isolate_snapshot.bin';
     case Artifact.isolateSnapshotData:
       if (mode == BuildMode.dynamicRelease) {
         return 'product_isolate_snapshot.bin';
@@ -181,7 +169,6 @@ class CachedArtifacts extends Artifacts {
         // android_arm in profile mode because it is available on all supported host platforms.
         return _getAndroidArtifactPath(artifact, TargetPlatform.android_arm, BuildMode.profile);
       case Artifact.flutterTester:
-      case Artifact.vmSnapshotData:
       case Artifact.isolateSnapshotData:
       case Artifact.frontendServerSnapshotForEngineDartSdk:
         final String engineArtifactsPath = cache.getArtifactDirectory('engine').path;
@@ -261,8 +248,6 @@ class LocalEngineArtifacts extends Artifacts {
       case Artifact.flutterTester:
         return _flutterTesterPath(platform);
       case Artifact.isolateSnapshotData:
-      case Artifact.vmSnapshotData:
-        return fs.path.join(engineOutPath, 'gen', 'flutter', 'lib', 'snapshot', _artifactToFileName(artifact));
       case Artifact.platformKernelDill:
         return fs.path.join(_getFlutterPatchedSdkPath(), _artifactToFileName(artifact));
       case Artifact.platformLibrariesJson:

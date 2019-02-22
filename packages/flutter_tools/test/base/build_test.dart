@@ -245,9 +245,7 @@ void main() {
       fs.directory(outputPath).createSync(recursive: true);
 
       genSnapshot.outputs = <String, String>{
-        fs.path.join(outputPath, 'vm_snapshot_data'): '',
         fs.path.join(outputPath, 'isolate_snapshot_data'): '',
-        fs.path.join(outputPath, 'vm_snapshot_instr'): '',
         fs.path.join(outputPath, 'isolate_snapshot_instr'): '',
       };
 
@@ -272,9 +270,7 @@ void main() {
       expect(genSnapshot.additionalArgs, <String>[
         '--deterministic',
         '--snapshot_kind=app-aot-blobs',
-        '--vm_snapshot_data=build/foo/vm_snapshot_data',
         '--isolate_snapshot_data=build/foo/isolate_snapshot_data',
-        '--vm_snapshot_instructions=build/foo/vm_snapshot_instr',
         '--isolate_snapshot_instructions=build/foo/isolate_snapshot_instr',
         '--no-sim-use-hardfp',
         '--no-use-integer-division',
@@ -289,9 +285,7 @@ void main() {
       fs.directory(outputPath).createSync(recursive: true);
 
       genSnapshot.outputs = <String, String>{
-        fs.path.join(outputPath, 'vm_snapshot_data'): '',
         fs.path.join(outputPath, 'isolate_snapshot_data'): '',
-        fs.path.join(outputPath, 'vm_snapshot_instr'): '',
         fs.path.join(outputPath, 'isolate_snapshot_instr'): '',
       };
 
@@ -316,9 +310,7 @@ void main() {
       expect(genSnapshot.additionalArgs, <String>[
         '--deterministic',
         '--snapshot_kind=app-aot-blobs',
-        '--vm_snapshot_data=build/foo/vm_snapshot_data',
         '--isolate_snapshot_data=build/foo/isolate_snapshot_data',
-        '--vm_snapshot_instructions=build/foo/vm_snapshot_instr',
         '--isolate_snapshot_instructions=build/foo/isolate_snapshot_instr',
         'main.dill',
       ]);
@@ -425,9 +417,7 @@ void main() {
       fs.directory(outputPath).createSync(recursive: true);
 
       genSnapshot.outputs = <String, String>{
-        fs.path.join(outputPath, 'vm_snapshot_data'): '',
         fs.path.join(outputPath, 'isolate_snapshot_data'): '',
-        fs.path.join(outputPath, 'vm_snapshot_instr'): '',
         fs.path.join(outputPath, 'isolate_snapshot_instr'): '',
       };
 
@@ -452,9 +442,7 @@ void main() {
       expect(genSnapshot.additionalArgs, <String>[
         '--deterministic',
         '--snapshot_kind=app-aot-blobs',
-        '--vm_snapshot_data=build/foo/vm_snapshot_data',
         '--isolate_snapshot_data=build/foo/isolate_snapshot_data',
-        '--vm_snapshot_instructions=build/foo/vm_snapshot_instr',
         '--isolate_snapshot_instructions=build/foo/isolate_snapshot_instr',
         '--no-sim-use-hardfp',
         '--no-use-integer-division',
@@ -469,9 +457,7 @@ void main() {
       fs.directory(outputPath).createSync(recursive: true);
 
       genSnapshot.outputs = <String, String>{
-        fs.path.join(outputPath, 'vm_snapshot_data'): '',
         fs.path.join(outputPath, 'isolate_snapshot_data'): '',
-        fs.path.join(outputPath, 'vm_snapshot_instr'): '',
         fs.path.join(outputPath, 'isolate_snapshot_instr'): '',
       };
 
@@ -496,9 +482,7 @@ void main() {
       expect(genSnapshot.additionalArgs, <String>[
         '--deterministic',
         '--snapshot_kind=app-aot-blobs',
-        '--vm_snapshot_data=build/foo/vm_snapshot_data',
         '--isolate_snapshot_data=build/foo/isolate_snapshot_data',
-        '--vm_snapshot_instructions=build/foo/vm_snapshot_instr',
         '--isolate_snapshot_instructions=build/foo/isolate_snapshot_instr',
         'main.dill',
       ]);
@@ -508,7 +492,6 @@ void main() {
 
   group('Snapshotter - JIT', () {
     const String kTrace = 'trace.txt';
-    const String kEngineVmSnapshotData = 'engine_vm_snapshot_data';
     const String kEngineIsolateSnapshotData = 'engine_isolate_snapshot_data';
 
     _FakeGenSnapshot genSnapshot;
@@ -520,7 +503,6 @@ void main() {
     setUp(() async {
       fs = MemoryFileSystem();
       fs.file(kTrace).createSync();
-      fs.file(kEngineVmSnapshotData).createSync();
       fs.file(kEngineIsolateSnapshotData).createSync();
 
       genSnapshot = _FakeGenSnapshot();
@@ -529,8 +511,6 @@ void main() {
       mockArtifacts = MockArtifacts();
 
       for (BuildMode mode in BuildMode.values) {
-        when(mockArtifacts.getArtifactPath(Artifact.vmSnapshotData, null, mode))
-            .thenReturn(kEngineVmSnapshotData);
         when(mockArtifacts.getArtifactPath(Artifact.isolateSnapshotData, null, mode))
             .thenReturn(kEngineIsolateSnapshotData);
       }
@@ -587,7 +567,6 @@ void main() {
         '--enable_asserts',
         '--snapshot_kind=app-jit',
         '--load_compilation_trace=$kTrace',
-        '--load_vm_snapshot_data=$kEngineVmSnapshotData',
         '--load_isolate_snapshot_data=$kEngineIsolateSnapshotData',
         '--isolate_snapshot_data=build/foo/isolate_snapshot_data',
         '--isolate_snapshot_instructions=build/foo/isolate_snapshot_instr',
@@ -628,7 +607,6 @@ void main() {
         '--enable_asserts',
         '--snapshot_kind=app-jit',
         '--load_compilation_trace=$kTrace',
-        '--load_vm_snapshot_data=$kEngineVmSnapshotData',
         '--load_isolate_snapshot_data=$kEngineIsolateSnapshotData',
         '--isolate_snapshot_data=build/foo/isolate_snapshot_data',
         '--isolate_snapshot_instructions=build/foo/isolate_snapshot_instr',
@@ -679,7 +657,6 @@ void main() {
         '--deterministic',
         '--snapshot_kind=app-jit',
         '--load_compilation_trace=$kTrace',
-        '--load_vm_snapshot_data=$kEngineVmSnapshotData',
         '--load_isolate_snapshot_data=$kEngineIsolateSnapshotData',
         '--isolate_snapshot_data=build/foo/isolate_snapshot_data',
         '--isolate_snapshot_instructions=build/foo/isolate_snapshot_instr',
@@ -719,7 +696,6 @@ void main() {
         '--deterministic',
         '--snapshot_kind=app-jit',
         '--load_compilation_trace=$kTrace',
-        '--load_vm_snapshot_data=$kEngineVmSnapshotData',
         '--load_isolate_snapshot_data=$kEngineIsolateSnapshotData',
         '--isolate_snapshot_data=build/foo/isolate_snapshot_data',
         '--isolate_snapshot_instructions=build/foo/isolate_snapshot_instr',
@@ -770,7 +746,6 @@ void main() {
         '--deterministic',
         '--snapshot_kind=app-jit',
         '--load_compilation_trace=$kTrace',
-        '--load_vm_snapshot_data=$kEngineVmSnapshotData',
         '--load_isolate_snapshot_data=$kEngineIsolateSnapshotData',
         '--isolate_snapshot_data=build/foo/isolate_snapshot_data',
         '--isolate_snapshot_instructions=build/foo/isolate_snapshot_instr',
@@ -810,7 +785,6 @@ void main() {
         '--deterministic',
         '--snapshot_kind=app-jit',
         '--load_compilation_trace=$kTrace',
-        '--load_vm_snapshot_data=$kEngineVmSnapshotData',
         '--load_isolate_snapshot_data=$kEngineIsolateSnapshotData',
         '--isolate_snapshot_data=build/foo/isolate_snapshot_data',
         '--isolate_snapshot_instructions=build/foo/isolate_snapshot_instr',
@@ -823,17 +797,11 @@ void main() {
 
       final Archive baselineApk = Archive()
           ..addFile(ArchiveFile('assets/flutter_assets/isolate_snapshot_instr',
-            'isolateSnapshotInstr'.length, 'isolateSnapshotInstr'.codeUnits))
-          ..addFile(ArchiveFile('assets/flutter_assets/vm_snapshot_data',
-            'engineVmSnapshotData'.length, 'engineVmSnapshotData'.codeUnits));
+            'isolateSnapshotInstr'.length, 'isolateSnapshotInstr'.codeUnits));
 
       fs.file('.baseline/100.apk')
           ..createSync(recursive: true)
           ..writeAsBytesSync(ZipEncoder().encode(baselineApk), flush: true);
-
-      fs.file('engine_vm_snapshot_data')
-          ..createSync(recursive: true)
-          ..writeAsStringSync('engineVmSnapshotData', flush: true);
 
       fs.file('build/foo/isolate_snapshot_instr')
           ..createSync(recursive: true)
@@ -865,7 +833,6 @@ void main() {
         '--deterministic',
         '--snapshot_kind=app-jit',
         '--load_compilation_trace=$kTrace',
-        '--load_vm_snapshot_data=$kEngineVmSnapshotData',
         '--load_isolate_snapshot_data=$kEngineIsolateSnapshotData',
         '--isolate_snapshot_data=build/foo/isolate_snapshot_data',
         '--reused_instructions=build/foo/isolate_snapshot_instr',
@@ -880,17 +847,11 @@ void main() {
 
       final Archive baselineApk = Archive()
         ..addFile(ArchiveFile('assets/flutter_assets/isolate_snapshot_instr',
-            'isolateSnapshotInstr'.length, 'isolateSnapshotInstr'.codeUnits))
-        ..addFile(ArchiveFile('assets/flutter_assets/vm_snapshot_data',
-            'engineVmSnapshotData'.length, 'engineVmSnapshotData'.codeUnits));
+            'isolateSnapshotInstr'.length, 'isolateSnapshotInstr'.codeUnits));
 
       fs.file('.baseline/100.apk')
         ..createSync(recursive: true)
         ..writeAsBytesSync(ZipEncoder().encode(baselineApk), flush: true);
-
-      fs.file('engine_vm_snapshot_data')
-        ..createSync(recursive: true)
-        ..writeAsStringSync('engineVmSnapshotData', flush: true);
 
       genSnapshot.outputs = <String, String>{
         'build/foo/isolate_snapshot_data': '',
@@ -922,7 +883,6 @@ void main() {
         '--deterministic',
         '--snapshot_kind=app-jit',
         '--load_compilation_trace=$kTrace',
-        '--load_vm_snapshot_data=$kEngineVmSnapshotData',
         '--load_isolate_snapshot_data=$kEngineIsolateSnapshotData',
         '--isolate_snapshot_data=build/foo/isolate_snapshot_data',
         '--reused_instructions=build/foo/isolate_snapshot_instr',
@@ -937,17 +897,11 @@ void main() {
 
       final Archive baselineApk = Archive()
         ..addFile(ArchiveFile('assets/flutter_assets/isolate_snapshot_instr',
-            'isolateSnapshotInstr'.length, 'isolateSnapshotInstr'.codeUnits))
-        ..addFile(ArchiveFile('assets/flutter_assets/vm_snapshot_data',
-            'engineVmSnapshotData'.length, 'engineVmSnapshotData'.codeUnits));
+            'isolateSnapshotInstr'.length, 'isolateSnapshotInstr'.codeUnits));
 
       fs.file('.baseline/100.apk')
         ..createSync(recursive: true)
         ..writeAsBytesSync(ZipEncoder().encode(baselineApk), flush: true);
-
-      fs.file('engine_vm_snapshot_data')
-        ..createSync(recursive: true)
-        ..writeAsStringSync('mismatchedEngineVmSnapshotData', flush: true);
 
       fs.file('build/foo/isolate_snapshot_instr')
         ..createSync(recursive: true)
@@ -980,17 +934,11 @@ void main() {
 
       final Archive baselineApk = Archive()
         ..addFile(ArchiveFile('assets/flutter_assets/isolate_snapshot_instr',
-            'isolateSnapshotInstr'.length, 'isolateSnapshotInstr'.codeUnits))
-        ..addFile(ArchiveFile('assets/flutter_assets/vm_snapshot_data',
-            'engineVmSnapshotData'.length, 'engineVmSnapshotData'.codeUnits));
+            'isolateSnapshotInstr'.length, 'isolateSnapshotInstr'.codeUnits));
 
       fs.file('.baseline/100.apk')
         ..createSync(recursive: true)
         ..writeAsBytesSync(ZipEncoder().encode(baselineApk), flush: true);
-
-      fs.file('engine_vm_snapshot_data')
-        ..createSync(recursive: true)
-        ..writeAsStringSync('engineVmSnapshotData', flush: true);
 
       fs.file('build/foo/isolate_snapshot_instr')
         ..createSync(recursive: true)

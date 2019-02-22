@@ -42,7 +42,6 @@ String getKernelPathForTransformerOptions(
 const String defaultPrivateKeyPath = 'privatekey.der';
 
 const String _kKernelKey = 'kernel_blob.bin';
-const String _kVMSnapshotData = 'vm_snapshot_data';
 const String _kIsolateSnapshotData = 'isolate_snapshot_data';
 const String _kIsolateSnapshotInstr = 'isolate_snapshot_instr';
 
@@ -199,17 +198,13 @@ Future<void> assemble({
   final Map<String, DevFSContent> assetEntries = Map<String, DevFSContent>.from(assetBundle.entries);
   if (kernelContent != null) {
     if (compilationTraceFilePath != null) {
-      final String vmSnapshotData = artifacts.getArtifactPath(Artifact.vmSnapshotData, null, buildMode);
       final String isolateSnapshotData = fs.path.join(getBuildDirectory(), _kIsolateSnapshotData);
       final String isolateSnapshotInstr = fs.path.join(getBuildDirectory(), _kIsolateSnapshotInstr);
-      assetEntries[_kVMSnapshotData] = DevFSFileContent(fs.file(vmSnapshotData));
       assetEntries[_kIsolateSnapshotData] = DevFSFileContent(fs.file(isolateSnapshotData));
       assetEntries[_kIsolateSnapshotInstr] = DevFSFileContent(fs.file(isolateSnapshotInstr));
     } else {
-      final String vmSnapshotData = artifacts.getArtifactPath(Artifact.vmSnapshotData, null, buildMode);
       final String isolateSnapshotData = artifacts.getArtifactPath(Artifact.isolateSnapshotData, null, buildMode);
       assetEntries[_kKernelKey] = kernelContent;
-      assetEntries[_kVMSnapshotData] = DevFSFileContent(fs.file(vmSnapshotData));
       assetEntries[_kIsolateSnapshotData] = DevFSFileContent(fs.file(isolateSnapshotData));
     }
   }

@@ -139,16 +139,12 @@ class AOTSnapshotter {
       genSnapshotArgs.add('--assembly=$assembly');
     } else {
       // Blob AOT snapshot.
-      final String vmSnapshotData = fs.path.join(outputDir.path, 'vm_snapshot_data');
       final String isolateSnapshotData = fs.path.join(outputDir.path, 'isolate_snapshot_data');
-      final String vmSnapshotInstructions = fs.path.join(outputDir.path, 'vm_snapshot_instr');
       final String isolateSnapshotInstructions = fs.path.join(outputDir.path, 'isolate_snapshot_instr');
-      outputPaths.addAll(<String>[vmSnapshotData, isolateSnapshotData, vmSnapshotInstructions, isolateSnapshotInstructions]);
+      outputPaths.addAll(<String>[isolateSnapshotData, isolateSnapshotInstructions]);
       genSnapshotArgs.addAll(<String>[
         '--snapshot_kind=app-aot-blobs',
-        '--vm_snapshot_data=$vmSnapshotData',
         '--isolate_snapshot_data=$isolateSnapshotData',
-        '--vm_snapshot_instructions=$vmSnapshotInstructions',
         '--isolate_snapshot_instructions=$isolateSnapshotInstructions',
       ]);
     }
@@ -363,13 +359,12 @@ class JITSnapshotter {
     final Directory outputDir = fs.directory(outputPath);
     outputDir.createSync(recursive: true);
 
-    final String engineVmSnapshotData = artifacts.getArtifactPath(Artifact.vmSnapshotData, null, buildMode);
     final String engineIsolateSnapshotData = artifacts.getArtifactPath(Artifact.isolateSnapshotData, null, buildMode);
     final String isolateSnapshotData = fs.path.join(outputDir.path, 'isolate_snapshot_data');
     final String isolateSnapshotInstructions = fs.path.join(outputDir.path, 'isolate_snapshot_instr');
 
     final List<String> inputPaths = <String>[
-      mainPath, compilationTraceFilePath, engineVmSnapshotData, engineIsolateSnapshotData,
+      mainPath, compilationTraceFilePath, engineIsolateSnapshotData,
     ];
 
     if (createPatch) {
@@ -415,38 +410,6 @@ class JITSnapshotter {
           }
         }
       }
-
-      {
-        final File f = fs.file(engineVmSnapshotData);
-        final ArchiveFile af = baselinePkg.findFile(
-            fs.path.join('assets/flutter_assets/vm_snapshot_data'));
-        if (af == null) {
-          printError('Error: Invalid baseline package ${baselineApk.path}.');
-          return 1;
-        }
-
-        // If engine snapshot artifact doesn't exist, gen_snapshot below will fail
-        // with a friendly error, so we don't need to handle this case here too.
-        if (f.existsSync()) {
-          // But if engine snapshot exists, its content must match the engine snapshot
-          // in baseline APK. Otherwise, we're trying to build an update at an engine
-          // version that might be binary incompatible with baseline APK.
-          final Function contentEquals = const ListEquality<int>().equals;
-          if (!contentEquals(f.readAsBytesSync(), af.content)) {
-            printError('Error: Detected engine changes unsupported by dynamic patching.');
-            return 1;
-          }
-        }
-      }
-
-      {
-        final ArchiveFile af = baselinePkg.findFile(
-            fs.path.join('assets/flutter_assets/vm_snapshot_instr'));
-        if (af != null) {
-          printError('Error: Invalid baseline package ${baselineApk.path}.');
-          return 1;
-        }
-      }
     }
 
     final String depfilePath = fs.path.join(outputDir.path, 'snapshot.d');
@@ -487,7 +450,6 @@ class JITSnapshotter {
     genSnapshotArgs.addAll(<String>[
       '--snapshot_kind=${supportsAppJit ? 'app-jit' : 'app'}',
       '--load_compilation_trace=$compilationTraceFilePath',
-      '--load_vm_snapshot_data=$engineVmSnapshotData',
       '--load_isolate_snapshot_data=$engineIsolateSnapshotData',
       '--isolate_snapshot_data=$isolateSnapshotData',
     ]);

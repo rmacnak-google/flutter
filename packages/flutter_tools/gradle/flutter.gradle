@@ -634,8 +634,6 @@ class FlutterTask extends BaseFlutterTask {
                 if (buildSharedLibrary) {
                     include "app.so"
                 } else {
-                    include "vm_snapshot_data"
-                    include "vm_snapshot_instr"
                     include "isolate_snapshot_data"
                     include "isolate_snapshot_instr"
                 }
