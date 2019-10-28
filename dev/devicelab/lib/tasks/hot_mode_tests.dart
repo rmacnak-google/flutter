@@ -23,6 +23,7 @@ TaskFunction createHotModeTest() {
     final File benchmarkFile = file(path.join(_editedFlutterGalleryDir.path, 'hot_benchmark.json'));
     rm(benchmarkFile);
     final List<String> options = <String>[
+      '--local-engine', 'android_debug_arm64',
       '--hot', '-d', device.deviceId, '--benchmark', '--verbose', '--resident', '--output-dill', path.join('build', 'app.dill')
     ];
     int hotReloadCount = 0;

@@ -316,6 +316,7 @@ class KernelCompiler {
       '--sdk-root',
       sdkRoot,
       '--strong',
+      '--gen-bytecode',
       '--target=$targetModel',
       '-Ddart.developer.causal_async_stacks=$causalAsyncStacks',
       ..._buildModeOptions(buildMode),
@@ -647,6 +648,7 @@ class DefaultResidentCompiler implements ResidentCompiler {
       sdkRoot,
       '--incremental',
       '--strong',
+      '--gen-bytecode',
       '--target=$targetModel',
       '-Ddart.developer.causal_async_stacks=$causalAsyncStacks',
       if (outputPath != null) ...<String>[
