@@ -468,14 +468,14 @@ void main() {
       fuchsiaSdk = MockFuchsiaSdk();
       fuchsiaArtifacts = MockFuchsiaArtifacts();
 
-      compilerSnapshot = memoryFileSystem.file('kernel_compiler.snapshot')..createSync();
+      compilerSnapshot = memoryFileSystem.file('frontend_server.snapshot')..createSync();
       platformDill = memoryFileSystem.file('platform_strong.dill')..createSync();
       patchedSdk = memoryFileSystem.file('flutter_runner_patched_sdk')..createSync();
       runner = memoryFileSystem.file('flutter_jit_runner')..createSync();
 
       mockArtifacts = MockArtifacts();
       when(mockArtifacts.getArtifactPath(
-        Artifact.fuchsiaKernelCompiler,
+        Artifact.frontendServerSnapshotForEngineDartSdk,
         platform: anyNamed('platform'),
         mode: anyNamed('mode'),
       )).thenReturn(compilerSnapshot.path);

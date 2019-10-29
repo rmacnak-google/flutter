@@ -60,7 +60,6 @@ enum Artifact {
   flutterMacOSPodspec,
 
   // Fuchsia artifacts from the engine prebuilts.
-  fuchsiaKernelCompiler,
   fuchsiaPlatformDill,
   fuchsiaPatchedSdk,
   fuchsiaFlutterJitRunner,
@@ -136,8 +135,6 @@ String _artifactToFileName(Artifact artifact, [ TargetPlatform platform, BuildMo
       return 'FlutterMacOS.podspec';
     case Artifact.webPlatformKernelDill:
       return 'flutter_ddc_sdk.dill';
-    case Artifact.fuchsiaKernelCompiler:
-      return 'kernel_compiler.snapshot';
     case Artifact.fuchsiaPlatformDill:
       return 'platform_strong.dill';
     case Artifact.fuchsiaPatchedSdk:
@@ -286,8 +283,6 @@ class CachedArtifacts extends Artifacts {
       getNameForBuildMode(mode),
     );
     switch (artifact) {
-      case Artifact.fuchsiaKernelCompiler:
-        return fs.path.join(root, 'jit', 'dart_binaries', artifactFileName);
       case Artifact.fuchsiaPlatformDill:
         return fs.path.join(root, 'jit', 'flutter_runner_patched_sdk', artifactFileName);
       case Artifact.fuchsiaPatchedSdk:
@@ -472,9 +467,14 @@ class LocalEngineArtifacts extends Artifacts {
         return fs.path.join(_hostEngineOutPath, _artifactToFileName(artifact));
       case Artifact.webPlatformKernelDill:
         return fs.path.join(_getFlutterWebSdkPath(), 'kernel', _artifactToFileName(artifact));
-      case Artifact.fuchsiaKernelCompiler:
       case Artifact.fuchsiaPlatformDill:
+        return fs.path.join(_getFuchsiaPatchedSdkPath(mode), artifactFileName);
       case Artifact.fuchsiaPatchedSdk:
+        // When using local engine always use [BuildMode.debug] regardless of
+        // what was specified in [mode] argument because local engine will
+        // have only one flutter_patched_sdk in standard location, that
+        // is happen to be what debug(non-release) mode is using.
+        return _getFuchsiaPatchedSdkPath(BuildMode.debug);
       case Artifact.fuchsiaFlutterJitRunner:
         assert(false, 'Invalid local engine artifact $artifact.');
         return null;
@@ -491,6 +491,10 @@ class LocalEngineArtifacts extends Artifacts {
   String _getFlutterPatchedSdkPath(BuildMode buildMode) {
     return fs.path.join(engineOutPath,
         buildMode == BuildMode.release ? 'flutter_patched_sdk_product' : 'flutter_patched_sdk');
+  }
+
+  String _getFuchsiaPatchedSdkPath(BuildMode buildMode) {
+    return fs.path.join(engineOutPath, 'flutter_runner_patched_sdk');
   }
 
   String _getFlutterWebSdkPath() {
